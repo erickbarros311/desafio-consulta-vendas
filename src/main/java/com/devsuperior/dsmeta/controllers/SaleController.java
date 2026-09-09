@@ -33,14 +33,7 @@ public class SaleController {
 		return null;
 	}
 
-	@GetMapping(value = "/summary")
-	public ResponseEntity<List<SaleSummaryDTO>> getSummary(
-            @RequestParam(name = "minDate", defaultValue = "") String minDate,
-            @RequestParam(name = "maxDate", defaultValue = "") String maxDate) {
-            
-        List<SaleSummaryDTO> dto = service.getSummary(minDate, maxDate);
-        return ResponseEntity.ok(dto);
-    }	
+	
 		
 		
 }
