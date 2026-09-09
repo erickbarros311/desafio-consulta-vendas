@@ -1,11 +1,16 @@
 package com.devsuperior.dsmeta.services;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.repositories.SaleRepository;
 
@@ -20,4 +25,16 @@ public class SaleService {
 		Sale entity = result.get();
 		return new SaleMinDTO(entity);
 	}
+	
+	public List<SaleSummaryDTO> getSummary(String minDateStr, String maxDateStr) {
+        LocalDate today = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+        
+        LocalDate maxDate = "".equals(maxDateStr) ? today : LocalDate.parse(maxDateStr);
+        LocalDate minDate = "".equals(minDateStr) ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr);
+
+        return repository.searchSalesSummary(minDate, maxDate);
+    }
+	
+	
+	
 }
