@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleReportDTO;
 import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.repositories.SaleRepository;
@@ -35,6 +38,21 @@ public class SaleService {
         return repository.searchSalesSummary(minDate, maxDate);
     }
 	
+	
+	
+	public Page<SaleReportDTO> getReport(String minDateStr, String maxDateStr, String name, Pageable pageable) {
+        LocalDate today = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+        
+        LocalDate maxDate = "".equals(maxDateStr) ? today : LocalDate.parse(maxDateStr);
+        LocalDate minDate = "".equals(minDateStr) ? maxDate.minusYears(1L) : LocalDate.parse(minDateStr);
+        String sellerName = "".equals(name) ? "" : name;
+
+        // Busca as entidades no banco
+        Page<Sale> result = repository.searchSalesReport(minDate, maxDate, sellerName, pageable);
+        
+        // Converte Page<Sale> para Page<SaleReportDTO> usando o construtor da entidade
+        return result.map(x -> new SaleReportDTO(x));
+    }
 	
 	
 }
